@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    network_mode: "host"  
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-admin-api'
+    
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    network_mode: "host"
+    depends_on:
+      - prometheus
+
+  
+# add store

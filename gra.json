@@ -1,0 +1,320 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 2,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {},
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "transparent",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "none"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 0,
+          "y": 0
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "10.1.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "e294f615-a82c-43ef-a960-86ba0e5b5b11"
+            },
+            "editorMode": "code",
+            "expr": "count(job_state{state=\"Queued\"})",
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Total Jobs",
+        "type": "stat"
+      },
+      {
+        "datasource": {},
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 18,
+          "x": 6,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "10.1.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "eba8c540-ab46-4987-9347-6112f4e0a081"
+            },
+            "disableTextWrap": false,
+            "editorMode": "code",
+            "expr": "avg(rate(job_processing_duration_seconds_sum[5m]) / rate(job_processing_duration_seconds_count[5m]))",
+            "fullMetaSearch": false,
+            "includeNullMetadata": true,
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A",
+            "useBackend": false
+          }
+        ],
+        "title": "Time average",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "e6f319b5-9c5c-48df-96f7-40fc9b1c189c"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "count(job_state{state=\"Completed\"})"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Complete"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "count(job_state{state=\"Processing\"} unless on(jobID) (job_state{state=\"Completed\"})) or\nvector(0)"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Processing"
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "blue",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "count(job_state{state=\"Queued\"} unless on(jobID) (job_state{state=\"Processing\"} or job_state{state=\"Completed\"})) or\nvector(0)"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Queue"
+                },
+                {
+                  "id": "color",
+                  "value": {
+                    "fixedColor": "yellow",
+                    "mode": "fixed"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "id": 4,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "10.1.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "a93b3831-a11d-4ef3-b5e7-54bc557e33c0"
+            },
+            "editorMode": "code",
+            "expr": "count(job_state{state=\"Queued\"} unless on(jobID) (job_state{state=\"Processing\"} or job_state{state=\"Completed\"})) or\nvector(0)",
+            "hide": false,
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "Queue"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "eba8c540-ab46-4987-9347-6112f4e0a081"
+            },
+            "editorMode": "code",
+            "exemplar": false,
+            "expr": "count(job_state{state=\"Processing\"} unless on(jobID) (job_state{state=\"Completed\"})) or\nvector(0)",
+            "hide": false,
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "eba8c540-ab46-4987-9347-6112f4e0a081"
+            },
+            "editorMode": "code",
+            "expr": "count(job_state{state=\"Completed\"})",
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "State Jobs",
+        "type": "stat"
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 38,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-5m",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "New dashboard Copy",
+    "uid": "ee9cb0d1-2e66-4f16-8dae-166000f285cd",
+    "version": 1,
+    "weekStart": ""
+  }
