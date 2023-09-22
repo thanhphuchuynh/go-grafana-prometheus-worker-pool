@@ -1,6 +1,9 @@
 global:
   scrape_interval: 10s
+  external_labels:
+    cluster: 'my-cluster'  # Replace with a unique identifier for your Prometheus instance
+    monitor: 'my-monitor'  # Another unique identifier
 scrape_configs:
-  - job_name: "workerpool"
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:8080']
+      - targets: ['localhost:9876']

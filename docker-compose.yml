@@ -7,12 +7,41 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - /mnt/sda2/tphuc/prometheus:/prometheus
     network_mode: "host"  
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--web.enable-admin-api'
+      - '--storage.tsdb.min-block-duration=2h'
+      - '--storage.tsdb.max-block-duration=2h'
+
+  thanos-sidecar:
+    image: thanosio/thanos:v0.23.1
+    command:
+      - 'sidecar'
+      - '--prometheus.url=http://localhost:9090'
+      - '--tsdb.path=/prometheus'
+      - '--objstore.config-file=/etc/thanos/minio_config.yaml'
+    network_mode: "host"  
+    volumes:
+      - ./minio_config.yaml:/etc/thanos/minio_config.yaml
+      - /mnt/sda2/tphuc/prometheus:/prometheus
+    depends_on:
+      - prometheus
     
+  minio:
+    image: minio/minio:latest
+    volumes:
+      - /mnt/sda2/tphuc/minio-data:/data
+    network_mode: "host"  
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data
+
   grafana:
     image: grafana/grafana:latest
     ports:
